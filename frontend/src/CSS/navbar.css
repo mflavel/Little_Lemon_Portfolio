@@ -1,0 +1,211 @@
+.Nav {
+  grid-column: 1 / 4;
+  grid-row: 1 / 2;
+  padding: 0.5rem 1rem;
+  position: relative;
+  z-index: 1000;
+}
+
+/* horizontal navbar */
+.Nav a:hover{
+  background-color: #f4ce14;
+  border-radius: 6px;
+}
+
+.link-button{
+  grid-column: 1 / 4;
+  grid-row: 1 / 2;
+  padding: 0.20rem .5rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.link-button:hover{
+  background-color: #f4ce14;
+  border-radius: 6px;
+}
+
+.Nav .site-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.Nav img {
+  height: 48px;
+  width: auto;
+}
+
+.Nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.Nav a {
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+  color:black;
+}
+
+.nav-links .active {
+  background-color: #495e57; /* green */
+  color: white;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.hamburger {
+  display: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* --- Dropdown styles for overflowed links --- */
+.more {
+  position: relative;
+}
+
+.more .dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.5rem 0;
+  min-width: 200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  flex-direction: column;
+  z-index: 999;
+}
+
+.more:hover .dropdown {
+  display: flex;
+}
+
+.more .dropdown a,
+.more .dropdown .link-button {
+  padding: 0.5rem 1rem;
+  text-align: left;
+  color: black;
+  background: none;
+  border: none;
+  text-decoration: none;
+  width: 100%;
+}
+
+.more .dropdown a:hover,
+.more .dropdown .link-button:hover {
+  background-color: #f4ce14;
+  border-radius: 0;
+}
+
+/* Show dropdown only when menu is open */
+/* Ensure dropdown isn't forced visible by earlier/duplicate rules.
+   Dropdown visibility will be controlled by the mobile menu state (JS toggling
+   the `.show` class) and by user interactions. */
+.more .dropdown {
+  display: none;
+}
+
+/* When the mobile menu is open, dropdowns inside `.more` can be shown via
+   JS (for example by toggling an `.open` class on `.more`) or by :focus.
+   We avoid using :hover here because touch devices don't reliably support it. */
+.nav-links.show .more .dropdown {
+  /* keep hidden by default; JS can add .open to .more to show if desired */
+  display: none;
+}
+
+h2{
+    font-size: 1.5rem;
+}
+
+
+/* --- Responsive Styling --- */
+@media (max-width: 800px) {
+  .Nav .site-inner {
+    flex-wrap: wrap;
+  }
+
+  /* show hamburger icon */
+  .hamburger {
+    display: block;
+    cursor: pointer;
+  }
+
+  /* Prevent dropdown from appearing until hamburger is opened */
+  .more .dropdown {
+    display: none;
+  }
+
+  /* Only show dropdown when mobile menu is open and More is tapped/hovered */
+  .nav-links.show .more:hover .dropdown,
+  .nav-links.show .more:focus-within .dropdown {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* hide nav links by default */
+  .nav-links {
+    display: none !important;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    right: 1rem;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 180px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    gap: 0.25rem; /* reduced vertical spacing between items */
+    padding: 0.25rem 0.5rem;
+  }
+
+  /* show links when "show" class is added */
+  .nav-links.show {
+    display: flex !important;
+  }
+
+  .nav-links a,
+  .link-button {
+    color: black;
+    padding: 0.25rem 0; /* smaller vertical padding */
+    text-align: left;
+    width: 100%;
+  }
+
+  /* Ensure each list item and its link/button render as full-width blocks
+     and ignore any inline styles set by JS (adjustNav) that may create
+     inconsistent spacing. */
+  .nav-links li {
+    display: block !important;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-links a,
+  .nav-links .link-button {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .Nav ul {
+    gap: 0.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+
