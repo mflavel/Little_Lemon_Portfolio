@@ -18,9 +18,9 @@ const Main = () => {
     // ✅ Fetch specials from Django backend
     useEffect(() => {
         fetch("http://127.0.0.1:8000/api/specials/")
-          .then((res) => res.json())
-          .then((data) => setSpecials(data))
-          .catch((err) => console.error(err));
+            .then((res) => res.json())
+            .then((data) => setSpecials(data))
+            .catch((err) => console.error(err));
     }, []);
 
     useEffect(() => {
@@ -62,7 +62,17 @@ const Main = () => {
             <section className="specials-grid">
                 {specials.map((item) => (
                     <div key={item.id} className="special-item">
-                        <img src={`http://127.0.0.1:8000${item.image}`} alt={item.name} />
+                        <img
+                            src={
+                                item.image
+                                    ? (item.image.startsWith('http')
+                                        ? item.image
+                                        : `http://127.0.0.1:8000${item.image}`)
+                                    : ''
+                            }
+                            alt={item.name}
+                            style={{ width: '100%', height: '150px', objectFit: 'cover' }}
+                        />
                         <h2>{item.name}</h2>
                         <p>${item.price}</p>
                         <p>{item.description}</p>

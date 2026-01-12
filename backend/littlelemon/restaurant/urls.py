@@ -8,6 +8,7 @@ urlpatterns = [
     path('menu-items/<int:pk>/', views.MenuItemDetailView.as_view(),
          name='single-menu-item'),
     path("specials/", views.specials),
+    path("menu-items/", views.all_menu_items),
 ]
 
 
