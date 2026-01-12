@@ -51,7 +51,7 @@ const Menu = () => {
                                 <Heading size="md">{item.name}</Heading>
                                 <Text fontWeight="bold">${item.price}</Text>
                                 <Text fontSize="sm" mb="2">{item.description}</Text>
-                                <Link to="/order-online">
+                                <Link to="/menu-item" state={{ item }}>
                                     <Button colorScheme="yellow" size="sm">Order Now</Button>
                                 </Link>
                             </Box>
