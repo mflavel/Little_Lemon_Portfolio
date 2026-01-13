@@ -1,7 +1,7 @@
 # Django Backend:
 cd backend
 create virtual environment: python –m venv (environment name)
-start virtual environment:  (environemnt name)\Scripts\activate
+start virtual environment:  venv\Scripts\Activate
 
 install Django: pip install django djangorestframework django-cors-headers
 
