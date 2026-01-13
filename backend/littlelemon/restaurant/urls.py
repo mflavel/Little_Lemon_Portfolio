@@ -1,3 +1,4 @@
+from atexit import register
 from django.urls import path, include
 from . import views
 from rest_framework.routers import DefaultRouter
@@ -12,7 +13,9 @@ urlpatterns = [
     path("menu-items/", views.all_menu_items),
     path('orders/create/', views.create_order),
     path('orders/', views.my_orders),
-    path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
+    path('register/', views.register),
+    path('login/', views.login),
 ]
+
 
 

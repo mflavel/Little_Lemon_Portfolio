@@ -8,6 +8,9 @@ from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 from rest_framework import status
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+from rest_framework_simplejwt.tokens import RefreshToken
 
 # Create your views here.
 class MenuItemView(generics.ListCreateAPIView):
@@ -31,7 +34,6 @@ def all_menu_items(request):
     return Response(serializer.data)
 
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
 def my_orders(request):
     orders = Order.objects.filter(user=request.user).order_by("-created_at")
     serializer = OrderSerializer(orders, many=True)
@@ -39,7 +41,6 @@ def my_orders(request):
 
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated])
 def create_order(request):
     user = request.user
     data = request.data.get("items")
@@ -69,3 +70,41 @@ def create_order(request):
 
     serializer = OrderSerializer(order)
     return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(["POST"])
+def register(request):
+    username = request.data.get("username")
+    password = request.data.get("password")
+    email = request.data.get("email", "")
+
+    if not username or not password:
+        return Response({"error": "Username and password required"}, status=400)
+
+    if User.objects.filter(username=username).exists():
+        return Response({"error": "Username already exists"}, status=400)
+
+    user = User.objects.create_user(
+        username=username,
+        password=password,
+        email=email
+    )
+
+    return Response({"message": "User created"})
+
+@api_view(["POST"])
+def login(request):
+    username = request.data.get("username")
+    password = request.data.get("password")
+
+    user = authenticate(username=username, password=password)
+
+    if user is None:
+        return Response({"error": "Invalid username or password"}, status=400)
+
+    refresh = RefreshToken.for_user(user)
+
+    return Response({
+        "access": str(refresh.access_token),
+        "refresh": str(refresh),
+        "username": user.username
+    })
