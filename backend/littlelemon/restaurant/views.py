@@ -13,13 +13,17 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 
 # Create your views here.
+
+
 class MenuItemView(generics.ListCreateAPIView):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
 
+
 class MenuItemDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
+
 
 @api_view(['GET'])
 def specials(request):
@@ -27,13 +31,16 @@ def specials(request):
     serializer = MenuItemSerializer(specials_items, many=True)
     return Response(serializer.data)
 
+
 @api_view(["GET"])
 def all_menu_items(request):
     items = MenuItem.objects.all().order_by("type", "name")
     serializer = MenuItemSerializer(items, many=True)
     return Response(serializer.data)
 
+
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def my_orders(request):
     orders = Order.objects.filter(user=request.user).order_by("-created_at")
     serializer = OrderSerializer(orders, many=True)
@@ -41,6 +48,7 @@ def my_orders(request):
 
 
 @api_view(["POST"])
+@permission_classes([IsAuthenticated])
 def create_order(request):
     user = request.user
     data = request.data.get("items")
@@ -56,11 +64,13 @@ def create_order(request):
     for item in data:
         menu_item = MenuItem.objects.get(id=item["menu_item"])
         quantity = item["quantity"]
+        note = item.get("note", "")
 
         OrderItem.objects.create(
             order=order,
             menu_item=menu_item,
-            quantity=quantity
+            quantity=quantity,
+            note=note
         )
 
         total += menu_item.price * quantity
@@ -70,6 +80,7 @@ def create_order(request):
 
     serializer = OrderSerializer(order)
     return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 @api_view(["POST"])
 def register(request):
@@ -90,6 +101,7 @@ def register(request):
     )
 
     return Response({"message": "User created"})
+
 
 @api_view(["POST"])
 def login(request):

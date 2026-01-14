@@ -6,6 +6,7 @@ import Nav from "./Pages/Nav.jsx";
 import Menu from './Pages/Menu'; // adjust the path if your file is somewhere else
 import MenuItem from './Pages/Menu-Item.jsx';
 import Login from './Pages/Login.jsx';
+import OnlineOrder from './Pages/Order-Online.jsx';
 
 function App() {
   return (
@@ -14,8 +15,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/menu" element={<Menu />} />
-        <Route path="/menu-item" element={<MenuItem />} />
+        <Route path="/menu-item/:id" element={<MenuItem />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/order-online" element={<OnlineOrder />} />
       </Routes>
       <Footer />
     </>

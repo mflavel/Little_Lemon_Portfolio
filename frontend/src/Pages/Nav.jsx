@@ -9,9 +9,12 @@ const Nav = ({ handleNavClick }) => {
   const [isOpen, setIsOpen] = useState(false); // hamburger menu
   const [hasOverflow, setHasOverflow] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // "More" dropdown
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false); // user menu
+  const [user, setUser] = useState({ username: localStorage.getItem("username") || null });
 
   const navLinksRef = useRef(null);
   const dropdownRef = useRef(null);
+  const userMenuRef = useRef(null);
 
   const toggleMenu = () => {
     setIsOpen((v) => !v);
@@ -27,6 +30,11 @@ const Nav = ({ handleNavClick }) => {
   const toggleDropdown = (e) => {
     e.stopPropagation(); // prevent document click handler from immediately closing it
     setIsDropdownOpen((v) => !v);
+  };
+
+  const toggleUserMenu = (e) => {
+    e && e.stopPropagation();
+    setIsUserMenuOpen((v) => !v);
   };
 
   const handleNavClickLocal = (sectionId) => {
@@ -85,6 +93,10 @@ const Nav = ({ handleNavClick }) => {
       ) {
         setIsDropdownOpen(false);
       }
+      // close user menu if clicked outside
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setIsUserMenuOpen(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -113,6 +125,8 @@ const Nav = ({ handleNavClick }) => {
   useEffect(() => {
     // whenever location changes, ensure menus are closed
     closeMenu();
+    // update user from storage (login may have changed it)
+    setUser({ username: localStorage.getItem("username") || null });
     // we only need to run this when the pathname changes
   }, [location.pathname]);
 
@@ -179,14 +193,41 @@ const Nav = ({ handleNavClick }) => {
             </Link>
           </li>
 
-          <li>
-            <Link
-              to="/login"
-              className={location.pathname === "/login" ? "active" : ""}
-              onClick={closeMenu}
-            >
-              Login
-            </Link>
+          <li ref={userMenuRef} className="user-menu">
+            {user && user.username ? (
+              <div className="user-button" onClick={toggleUserMenu}>
+                <span style={{ marginRight: 6 }}>👤</span>
+                <span>{user.username}</span>
+                {isUserMenuOpen && (
+                  <div className="user-dropdown">
+                    <button
+                      type="button"
+                      className="link-button"
+                      onClick={() => {
+                        // logout
+                        localStorage.removeItem("access");
+                        localStorage.removeItem("refresh");
+                        localStorage.removeItem("username");
+                        setUser({ username: null });
+                        setIsUserMenuOpen(false);
+                        navigate("/login");
+                        closeMenu();
+                      }}
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className={location.pathname === "/login" ? "active" : ""}
+                onClick={closeMenu}
+              >
+                Login
+              </Link>
+            )}
           </li>
         </ul>
       </div>

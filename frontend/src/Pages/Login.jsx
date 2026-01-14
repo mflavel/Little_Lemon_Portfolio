@@ -30,6 +30,8 @@ const Login = () => {
 
       localStorage.setItem("access", data.access);
       localStorage.setItem("refresh", data.refresh);
+      // store username for UI
+      if (data.username) localStorage.setItem("username", data.username);
 
       navigate("/");
     } else {
